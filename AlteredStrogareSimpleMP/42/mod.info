@@ -1,0 +1,5 @@
+name=Altered Strogare Container Sorter (MP/SP)
+id=AlteredStrogareSimpleMP
+description=A modified variant of the practical Harlan storage sorting mod for Project Zomboid Build 42.20. Assign categories to containers, sort one selected source, and reduce repetitive base logistics without removing survival pressure.
+poster=poster.png
+version=0.2.7

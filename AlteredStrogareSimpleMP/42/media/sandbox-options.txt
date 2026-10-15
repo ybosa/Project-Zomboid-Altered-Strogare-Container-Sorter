@@ -1,0 +1,55 @@
+VERSION = 1,
+
+option Strogare.SortRadius
+{
+    type = integer, min = 0, max = 30, default = 30,
+    page = Strogare, translation = Strogare_SortRadius,
+}
+
+option Strogare.SortFloorRange
+{
+    type = integer, min = 0, max = 2, default = 2,
+    page = Strogare, translation = Strogare_SortFloorRange,
+}
+
+option Strogare.MaxItemsPerSort
+{
+    type = integer, min = 1, max = 5000, default = 500,
+    page = Strogare, translation = Strogare_MaxItemsPerSort,
+}
+
+option Strogare.IncludeOtherFloors
+{
+    type = boolean, default = true,
+    page = Strogare, translation = Strogare_IncludeOtherFloors,
+}
+
+option Strogare.IncludeVehicleContainers
+{
+    type = boolean, default = false,
+    page = Strogare, translation = Strogare_IncludeVehicleContainers,
+}
+
+option Strogare.AllowVehicleSorting
+{
+    type = boolean, default = false,
+    page = Strogare, translation = Strogare_AllowVehicleSorting,
+}
+
+option Strogare.AdminOnly
+{
+    type = boolean, default = false,
+    page = Strogare, translation = Strogare_AdminOnly,
+}
+
+option Strogare.DebugMode
+{
+    type = boolean, default = false,
+    page = Strogare, translation = Strogare_DebugMode,
+}
+
+option Strogare.Language
+{
+    type = enum, numValues = 3, default = 1,
+    page = Strogare, translation = Strogare_Language,
+}
