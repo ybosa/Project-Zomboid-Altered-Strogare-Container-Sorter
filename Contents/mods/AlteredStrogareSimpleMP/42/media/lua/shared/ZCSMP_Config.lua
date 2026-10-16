@@ -107,6 +107,7 @@ ZCSMP.Config.Categories = {
     "Furniture",  --[[ might be done ]]
     "WaterContainer", --[[ done ]]
     "Fuel",  --[[ done ]]
+    "Alcohol",
 }
 
 ZCSMP.Lang = ZCSMP.Lang or {}

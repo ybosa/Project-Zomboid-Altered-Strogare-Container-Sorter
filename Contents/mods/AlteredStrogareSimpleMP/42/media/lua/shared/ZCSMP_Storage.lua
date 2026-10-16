@@ -264,8 +264,8 @@ function ZCSMP.Storage.FindNearbyContainers(playerObj, radius)
     local square = playerObj.getSquare and playerObj:getSquare() or nil
     if not cell or not square then return result end
     local px, py, pz = square:getX(), square:getY(), square:getZ()
-    local minZ = math.max(0, pz - floorRange)
-    local maxZ = pz + floorRange
+    local minZ = math.max(-31, pz - floorRange)
+    local maxZ = math.min(31, pz + floorRange)
     for z = minZ, maxZ do
         for x = px - radius, px + radius do
             for y = py - radius, py + radius do
