@@ -118,13 +118,14 @@ local weaponNeedles = { "Gun", "Rifle", "Pistol", "Shotgun", "Axe", "Knife", "Sp
 local foodUnPerishableNeedles = { "Canned","Chips","Cereal","Chocolate","Popcorn","Marmalade","Rice","seeds","Candy","Candied","Pasta","Flour","Cornflour","Cornmeal","Dried","(Dried)","Olives","Peanuts","Macaroni",}
 local foodPerishableNeedles = { "Open","(Open)","Opened","(Opened)","Fresh","(Fresh)","Stale","(Stale)"}
 local foodRottenNeedles = { "Rotten","(Rotten)" }
-local waterContainerNeedles = { "Canteen","Hydration Pack","Water Bag","Bucket","Backpack Sprayer"}
+local waterContainerNeedles = { "Canteen","HydrationPack","WaterBag","Bucket","BackpackSprayer"}
 local rifleNeedles = {"Rifle","Gun", "Carbine","MachineGun","MiniGun"}
 local pistolNeedles = {"Pistol","Revolver","Magnum"}
 local shotgunNeedles = {"Shotgun", "Double Barrel","12ga","gauge"}
 local magazineNeedles = {"Magazine","Clip","Drum","Belt","SpeedLoader","MoonClip","Link","GunMagazine"}
 local clothingNeedles = { "Clothing", "Shirt", "TShirt", "Trousers", "Pants", "Jacket", "Shoes", "Boots", "Socks", "Hat", "Cap", "Beanie", "Glasses", "Goggles", "Scarf", "Tie", "Dress", "Skirt", "Suit", "Apron", "Underwear", "LongJohns", "Bra", "Briefs", "Bikini", "Swimsuit", "Poncho", "Hoodie", "Sweater", "Jumper", "Coat", "Robe", "Overalls"}
 local alcoholNeedles = { " Wine ", " Whiskey ", " Bourbon ", " Brandy ", " Champagne ", " Cider ", " Coffee Liqueur ", " Curacao ", " Gin ", " Grenadine ", " Beer ", " Port ", " Rum ", " Scotch ", " Sherry ", " Vermouth ", " Vodka " }
+local softDrinksNeedles = { "Soda", "Pop ", "Pop2", "Pop3", "PopBottle", "SodaCan", "Soda Pop", "SodaBlueberry", "SodaBubblegum", "SodaGrape", "SodaLime", "SodaPineapple", "SodaStrewberry" }
 
 local function isFarmingSupply(item, text)
     local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
@@ -188,7 +189,7 @@ local function isFoodUnperishableLike(item, text)
     local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
     if  displayCategory ~= "food" then return false end
     return (not containsAny(text, foodPerishableNeedles))
-            and containsAny(text, foodUnPerishableNeedles)
+            and (containsAny(text, foodUnPerishableNeedles) or containsAny(text, softDrinksNeedles))
 end
 
 local function isFoodRotten(item, text)
@@ -279,7 +280,7 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if containsAny(text, pistolNeedles) then return "Pistol" end
     if containsAny(text, rifleNeedles) then return "Rifle" end
     if isToolLike(item, text) then return "Tools" end
-    if isWeapon(item,text) then return "Weapon" end
+    if isWeapon(item,text) then return "Weapons" end
 
     if containsAny(text, { "Plank","Log"}) then return "WoodMaterials" end
     if containsAny(text, { "Metal", "SheetMetal", "MetalBar", "MetalPipe","Wire"}) then return "MetalMaterials" end
