@@ -90,6 +90,22 @@ ZCSMP.Config.Categories = {
     "Cooking",
     "Trash",
     "Other",
+    "FoodUnperishable", --[[ done ]]
+    "WoodMaterials", --[[ done ]]
+    "MetalMaterials", --[[ done ]]
+    "Paint", --[[ might be done ]]
+    "NailsAndScrews", --[[ done ]]
+    "Rifle",  --[[ done ]]
+    "Pistol", --[[ done ]]
+    "Shotgun", --[[ done ]]
+    "Magazine", --[[ done ]]
+    "WeaponParts", --[[ might be done ]]
+    "Entertainment", --[[ might be done ]]
+    "Container", --[[ might be done ]]
+    "Accessory",  --[[ might be done ]]
+    "Furniture",  --[[ might be done ]]
+    "WaterContainer", --[[ done ]]
+    "Fuel",  --[[ done ]]
 }
 
 ZCSMP.Lang = ZCSMP.Lang or {}

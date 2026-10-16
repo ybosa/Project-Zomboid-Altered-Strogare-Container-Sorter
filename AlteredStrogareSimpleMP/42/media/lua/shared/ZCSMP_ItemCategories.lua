@@ -17,10 +17,10 @@ local displayCategoryMap = {
     materialweapon = "Materials",
     cookingweapon = "Cooking",
     clothing = "Clothing",
-    accessory = "Clothing",
+    accessory = "Accessory",
     protectivegear = "Clothing",
-    bag = "Clothing",
-    container = "Clothing",
+    bag = "Container",
+    container = "Container",
     ears = "Clothing",
     malebody = "Clothing",
     femalebody = "Clothing",
@@ -35,15 +35,15 @@ local displayCategoryMap = {
     gardeningweapon = "Farming",
     fishing = "Farming",
     cooking = "Cooking",
-    watercontainer = "Cooking",
+    watercontainer = "WaterContainer",
     household = "Cooking",
     material = "Materials",
     reciperesource = "Books",
-    paint = "Materials",
+    paint = "Paint",
     animalpart = "Materials",
     camping = "Tools",
     tool = "Tools",
-    furniture = "Materials",
+    furniture = "Furniture",
     junk = "Trash",
     zeddmg = "Trash",
 }
@@ -109,9 +109,17 @@ local ammoSupplyNeedles = { "Ammo", "Bullets", "Shells", "GunMagazine", "Magazin
 local medicalSupplyNeedles = { "SutureNeedle", "Suture", "Bandage", "Pills", "Antibiotics", "Disinfectant", "AlcoholWipes", "Splint", "FirstAid", "Tweezers", "Scalpel", "Medical", "Wound", "Poultice" }
 local vehicleSupplyNeedles = { "CarBattery", "BatteryCharger", "SparkPlug", "LugWrench", "Jack", "GasCan", "EngineParts", "Tire", "Brake", "Suspension", "Muffler", "Windshield", "Mechanic" }
 local cookingSupplyNeedles = { "KitchenKnife" }
-local bookNeedles = { "Book", "Newspaper", "Journal", "Map", "Recipe", "Magazine", "Literature", "Notebook", "SheetPaper", "SkillBook", "Comic", "RecipeResource" }
+local bookNeedles = { "Book", "Newspaper", "Journal", "Map", "Recipe", "Literature", "Notebook", "SheetPaper", "SkillBook", "Comic", "RecipeResource" }
 local toolNeedles = { "Tool", "Hammer", "Screwdriver", "Saw", "Wrench", "Crowbar", "Shovel", "PickAxe", "Pickaxe", "Torch", "BlowTorch", "Welding", "Jack", "LugWrench", "Needle", "Scissors", "FishingRod", "Trap", "Camping", "Lantern", "AxeStone", "HandAxe", "WoodAxe" }
 local weaponNeedles = { "Gun", "Rifle", "Pistol", "Shotgun", "Axe", "Knife", "Spear", "Machete", "BaseballBat", "Weapon", "Blade", "Club", "Sledgehammer", "Katana", "Bow", "Crossbow" }
+local foodUnPerishableNeedles = { "Canned","Chips","Cereal","Chocolate","Popcorn","Marmalade","Rice","seeds","Candy","Candied","Pasta","Flour","Cornflour","Cornmeal","Dried","(Dried)","Olives","Peanuts","Macaroni",}
+local foodPerishableNeedles = { "Open","(Open)","Opened","(Opened)","Fresh","(Fresh)","Stale","(Stale)"}
+local foodRottenNeedles = { "Rotten","(Rotten)" }
+local waterContainerNeedles = { "Canteen","Hydration Pack","Water Bag","Bucket","Backpack Sprayer"}
+local rifleNeedles = {"Rifle","Gun", "Carbine","MachineGun","MiniGun"}
+local pistolNeedles = {"Pistol","Revolver","Magnum"}
+local shotgunNeedles = {"Shotgun", "Double Barrel","12ga","gauge"}
+local magazineNeedles = {"Magazine","Clip","Drum","Belt","SpeedLoader","MoonClip","Link","GunMagazine"}
 
 local function isFarmingSupply(item, text)
     local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
@@ -155,31 +163,77 @@ local function isToolLike(item, text)
     return containsAny(text, toolNeedles)
 end
 
-function ZCSMP.ItemCategories.GetCategory(item)
-    if not item then return nil end
+local function isFoodUnperishableLike(item, text)
+    local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
+    if  displayCategory ~= "food" then return false end
+    return (not containsAny(text, foodPerishableNeedles))
+            and containsAny(text, foodUnPerishableNeedles)
+end
 
+local function isFoodRotten(item, text)
+    local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
+    if  displayCategory ~= "food" then return false end
+    return containsAny(text,foodRottenNeedles)
+end
+
+local function isUsefulWaterContainer(item, text)
+    local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
+    if containsAny(text, {"Gas", "Jerry", "Paint"}) then return false end
+    if displayCategory == "watercontainer" and containsAny(text, waterContainerNeedles) then
+        return true
+    end
+    return false
+end
+
+
+function ZCSMP.ItemCategories.GetCategory(item)
+    local text = getTypeText(item)
+    if not item then return nil end
+--     then books because they were sorted into other boxes
+    if isBookLike(item, text) then return "Books" end
+--     antibiotics ended up in the wrong container so medical next to fix
+    if isMedicalSupply(item, text) then return "Medical" end
+--  check if food and what type
+    if isUsefulWaterContainer(item, text) then return "WaterContainer" end
+    if isFoodRotten(item, text) then return "Trash" end
+    if isFoodUnperishableLike(item, text) then return "FoodUnperishable" end
     if isType(item, "Food") or safeMethod(item, "IsFood") == true then return "Food" end
     if isClothingLike(item) then return "Clothing" end
 
-    local text = getTypeText(item)
+    if containsAny(text, { "Gas Can","Jerry Can","Gas"}) then return "Fuel" end
     if isFarmingSupply(item, text) then return "Farming" end
-    if isAmmoSupply(item, text) then return "Ammo" end
-    if isMedicalSupply(item, text) then return "Medical" end
     if isVehicleSupply(item, text) then return "Vehicle" end
+    if containsAny(text, { "Paint"}) then return "Paint" end
     if isCookingSupply(item, text) then return "Cooking" end
+
+
+
+    if isToolLike(item, text) then return "Tools" end
+
+
+    if containsAny(text, { "Seed", "Fertilizer", "Compost", "GardeningSpray", "WateringCan", "Trowel", "Hoe", "Garden", "Farming" }) then return "Farming" end
+    if isAmmoSupply(item, text) then
+        if containsAny(text, magazineNeedles) then
+            return "Magazine"
+        else
+            return "Ammo"
+        end
+    end
+
+
+    if containsAny(text, shotgunNeedles) then return "Shotgun" end
+    if containsAny(text, pistolNeedles) then return "Pistol" end
+    if containsAny(text, rifleNeedles) then return "Rifle" end
+    if isType(item, "HandWeapon") then return "Weapons" end
+    if containsAny(text, weaponNeedles) then return "Weapons" end
+
+    if containsAny(text, { "Plank","Log"}) then return "WoodMaterials" end
+    if containsAny(text, { "Metal", "SheetMetal", "MetalBar", "MetalPipe","Wire"}) then return "MetalMaterials" end
+    if containsAny(text, { "Nails","Screws"}) then return "NailsAndScrews" end
+
 
     local mapped = fromDisplayCategory(item)
     if mapped then return mapped end
-
-    if isBookLike(item, text) then return "Books" end
-    if isToolLike(item, text) then return "Tools" end
-
-    if isType(item, "HandWeapon") then return "Weapons" end
-
-    if containsAny(text, { "Seed", "Fertilizer", "Compost", "GardeningSpray", "WateringCan", "Trowel", "Hoe", "Garden", "Farming" }) then return "Farming" end
-    if containsAny(text, ammoSupplyNeedles) then return "Ammo" end
-    if containsAny(text, medicalSupplyNeedles) then return "Medical" end
-    if containsAny(text, weaponNeedles) then return "Weapons" end
     if containsAny(text, { "Material", "Plank", "Nails", "Screws", "SheetMetal", "MetalBar", "MetalPipe", "Log", "Concrete", "Wire", "DuctTape", "Glue", "Twine", "Rope", "Thread", "Yarn", "Leather", "Denim", "Cotton", "Scrap", "Paint", "Tarp", "Burlap", "Charcoal", "Clay", "Brick", "Stone", "Glass" }) then return "Materials" end
     if containsAny(text, { "Clothing", "Shirt", "TShirt", "Trousers", "Pants", "Jacket", "Shoes", "Boots", "Socks", "Hat", "Cap", "Beanie", "Gloves", "Vest", "Helmet", "Bag", "Backpack", "Satchel", "Duffel", "Mask", "Glasses", "Goggles", "Scarf", "Tie", "Dress", "Skirt", "Suit", "Apron", "Underwear", "LongJohns", "Bra", "Briefs", "Bikini", "Swimsuit", "Belt", "Holster", "FannyPack", "Purse", "Wallet", "Poncho", "Hoodie", "Sweater", "Jumper", "Coat", "Robe", "Overalls", "Watch", "Necklace", "Ring", "Bracelet", "Earring" }) then return "Clothing" end
     if containsAny(text, { "Electronics", "Radio", "Walkie", "Remote", "Battery", "Generator", "LightBulb", "Amplifier", "Headphones", "Camera", "Phone", "TV", "Speaker", "Microphone", "Receiver", "Transmitter", "Antenna", "AlarmClock", "Digital" }) then return "Electronics" end
