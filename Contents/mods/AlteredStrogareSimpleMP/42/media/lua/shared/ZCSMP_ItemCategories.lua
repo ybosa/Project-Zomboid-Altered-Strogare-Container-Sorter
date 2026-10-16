@@ -18,7 +18,7 @@ local displayCategoryMap = {
     cookingweapon = "Cooking",
     clothing = "Clothing",
     accessory = "Accessory",
-    protectivegear = "Clothing",
+    protectivegear = "ProtectiveGear",
     bag = "Container",
     container = "Container",
     ears = "Clothing",
@@ -120,6 +120,7 @@ local rifleNeedles = {"Rifle","Gun", "Carbine","MachineGun","MiniGun"}
 local pistolNeedles = {"Pistol","Revolver","Magnum"}
 local shotgunNeedles = {"Shotgun", "Double Barrel","12ga","gauge"}
 local magazineNeedles = {"Magazine","Clip","Drum","Belt","SpeedLoader","MoonClip","Link","GunMagazine"}
+local clothingNeedles = { "Clothing", "Shirt", "TShirt", "Trousers", "Pants", "Jacket", "Shoes", "Boots", "Socks", "Hat", "Cap", "Beanie", "Glasses", "Goggles", "Scarf", "Tie", "Dress", "Skirt", "Suit", "Apron", "Underwear", "LongJohns", "Bra", "Briefs", "Bikini", "Swimsuit", "Poncho", "Hoodie", "Sweater", "Jumper", "Coat", "Robe", "Overalls"}
 
 local function isFarmingSupply(item, text)
     local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
@@ -157,6 +158,18 @@ local function isBookLike(item, text)
     return containsAny(text, bookNeedles)
 end
 
+local function isAccessoryLike(item, text)
+    local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
+    if displayCategory == "accessory" and not containsAny(text, clothingNeedles) then return true end
+    return false
+end
+
+local function isProtectiveGearLike(item, text)
+    local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
+    if displayCategory == "protectivegear" then return true end
+    return false
+end
+
 local function isToolLike(item, text)
     local displayCategory = normalize(safeMethod(item, "getDisplayCategory"))
     if displayCategory == "tool" or displayCategory == "toolweapon" or displayCategory == "camping" then return true end
@@ -189,6 +202,8 @@ end
 function ZCSMP.ItemCategories.GetCategory(item)
     local text = getTypeText(item)
     if not item then return nil end
+    if containsAny(text, { "Oxygen Tank"}) then return "Materials" end
+    if containsAny(text, { "Welder Mask"}) then return "Tools" end
 --     then books because they were sorted into other boxes
     if isBookLike(item, text) then return "Books" end
 --     antibiotics ended up in the wrong container so medical next to fix
@@ -198,6 +213,8 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if isFoodRotten(item, text) then return "Trash" end
     if isFoodUnperishableLike(item, text) then return "FoodUnperishable" end
     if isType(item, "Food") or safeMethod(item, "IsFood") == true then return "Food" end
+    if isAccessoryLike(item) then return "Accessory" end
+    if isProtectiveGearLike(item) then return "ProtectiveGear" end
     if isClothingLike(item) then return "Clothing" end
 
     if containsAny(text, { "Gas Can","Jerry Can","Gas"}) then return "Fuel" end
@@ -235,6 +252,8 @@ function ZCSMP.ItemCategories.GetCategory(item)
     local mapped = fromDisplayCategory(item)
     if mapped then return mapped end
     if containsAny(text, { "Material", "Plank", "Nails", "Screws", "SheetMetal", "MetalBar", "MetalPipe", "Log", "Concrete", "Wire", "DuctTape", "Glue", "Twine", "Rope", "Thread", "Yarn", "Leather", "Denim", "Cotton", "Scrap", "Paint", "Tarp", "Burlap", "Charcoal", "Clay", "Brick", "Stone", "Glass" }) then return "Materials" end
+    if containsAny(text, { "Gloves", "Vest", "Helmet", "Mask", }) then return "ProtectiveGear" end
+    if containsAny(text, { "Belt", "Holster", "Watch", }) then return "Accessory" end
     if containsAny(text, { "Clothing", "Shirt", "TShirt", "Trousers", "Pants", "Jacket", "Shoes", "Boots", "Socks", "Hat", "Cap", "Beanie", "Gloves", "Vest", "Helmet", "Bag", "Backpack", "Satchel", "Duffel", "Mask", "Glasses", "Goggles", "Scarf", "Tie", "Dress", "Skirt", "Suit", "Apron", "Underwear", "LongJohns", "Bra", "Briefs", "Bikini", "Swimsuit", "Belt", "Holster", "FannyPack", "Purse", "Wallet", "Poncho", "Hoodie", "Sweater", "Jumper", "Coat", "Robe", "Overalls", "Watch", "Necklace", "Ring", "Bracelet", "Earring" }) then return "Clothing" end
     if containsAny(text, { "Electronics", "Radio", "Walkie", "Remote", "Battery", "Generator", "LightBulb", "Amplifier", "Headphones", "Camera", "Phone", "TV", "Speaker", "Microphone", "Receiver", "Transmitter", "Antenna", "AlarmClock", "Digital" }) then return "Electronics" end
     if containsAny(text, { "Vehicle", "Car", "Engine", "Trunk" }) or containsAny(text, vehicleSupplyNeedles) then return "Vehicle" end

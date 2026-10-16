@@ -11,8 +11,8 @@ ZCSMP.Config.Defaults = ZCSMP.Config.Defaults or {
     SortFloorRange = 2,
     MaxSortFloorRange = 2,
     IncludeOtherFloors = true,
-    IncludeVehicleContainers = false,
-    AllowVehicleSorting = false,
+    IncludeVehicleContainers = true,
+    AllowVehicleSorting = true,
     MaxItemsPerSort = 500,
     AdminOnly = false,
     DebugMode = false,
@@ -103,6 +103,7 @@ ZCSMP.Config.Categories = {
     "Entertainment", --[[ might be done ]]
     "Container", --[[ might be done ]]
     "Accessory",  --[[ might be done ]]
+    "ProtectiveGear",
     "Furniture",  --[[ might be done ]]
     "WaterContainer", --[[ done ]]
     "Fuel",  --[[ done ]]
