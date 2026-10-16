@@ -265,11 +265,6 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if containsAny(text, { "Paint"}) then return "Paint" end
     if isCookingSupply(item, text) then return "Cooking" end
 
-
-
-    if isToolLike(item, text) then return "Tools" end
-
-
     if containsAny(text, { "Seed", "Fertilizer", "Compost", "GardeningSpray", "WateringCan", "Trowel", "Hoe", "Garden", "Farming" }) then return "Farming" end
     if isAmmoSupply(item, text) then
         if containsAny(text, magazineNeedles) then
@@ -283,6 +278,7 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if containsAny(text, shotgunNeedles) then return "Shotgun" end
     if containsAny(text, pistolNeedles) then return "Pistol" end
     if containsAny(text, rifleNeedles) then return "Rifle" end
+    if isToolLike(item, text) then return "Tools" end
     if isWeapon(item,text) then return "Weapon" end
 
     if containsAny(text, { "Plank","Log"}) then return "WoodMaterials" end
