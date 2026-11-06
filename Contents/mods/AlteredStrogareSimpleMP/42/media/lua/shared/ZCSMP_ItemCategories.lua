@@ -280,15 +280,14 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if containsAny(text, pistolNeedles) then return "Pistol" end
     if containsAny(text, rifleNeedles) then return "Rifle" end
     if isToolLike(item, text) then return "Tools" end
-    if isWeapon(item,text) then return "Weapons" end
 
+    if containsAny(text, { "radio"}) then return "Electronics" end
     if containsAny(text, { "Plank","Log"}) then return "WoodMaterials" end
+    if isWeapon(item,text) then return "Weapons" end
     if containsAny(text, { "Metal", "SheetMetal", "MetalBar", "MetalPipe","Wire"}) then return "MetalMaterials" end
     if containsAny(text, { "Nails","Screws"}) then return "NailsAndScrews" end
 
 
-    local mapped = fromDisplayCategory(item)
-    if mapped then return mapped end
     if containsAny(text, { "Material", "Plank", "Nails", "Screws", "SheetMetal", "MetalBar", "MetalPipe", "Log", "Concrete", "Wire", "DuctTape", "Glue", "Twine", "Rope", "Thread", "Yarn", "Leather", "Denim", "Cotton", "Scrap", "Paint", "Tarp", "Burlap", "Charcoal", "Clay", "Brick", "Stone", "Glass" }) then return "Materials" end
     if containsAny(text, { "Gloves", "Vest", "Helmet", "Mask", }) then return "ProtectiveGear" end
     if containsAny(text, { "Belt", "Holster", "Watch", }) then return "Accessory" end
@@ -297,6 +296,7 @@ function ZCSMP.ItemCategories.GetCategory(item)
     if containsAny(text, { "Vehicle", "Car", "Engine", "Trunk" }) or containsAny(text, vehicleSupplyNeedles) then return "Vehicle" end
     if containsAny(text, { "Cooking", "Pot", "Pan", "Bowl", "Mug", "KitchenKnife", "Spoon", "Fork", "Plate", "RollingPin", "CanOpener", "Saucepan", "Kettle", "Skillet", "Griddle", "RoastingPan", "Baking", "Thermos", "Bottle", "Cup" }) then return "Cooking" end
     if containsAny(text, { "Trash", "Junk", "Garbage", "Empty", "Broken", "RippedSheetsDirty", "Dirt", "Corpse", "ZedDmg", "Rotten", "Burnt" }) then return "Trash" end
-
+    local mapped = fromDisplayCategory(item)
+    if mapped then return mapped end
     return nil
 end
